@@ -1,24 +1,64 @@
-def chatbot():
-    print("Chatbot: Hello! I am your chatbot. Type 'bye' to exit.")
-    
-    while True:
-        user_input = input("You: ").lower()
+mport tkinter as tk
+from tkinter import scrolledtext
 
-        if "hi" in user_input or "hello" in user_input:
-            print("Chatbot: Hello there! How can I help you?")
-        
-        elif "how are you" in user_input:
-            print("Chatbot: I'm just a bot, but I'm doing great! How about you?")
-        
-        elif "your name" in user_input:
-            print("Chatbot: I am a simple chatbot made in Python.")
-        
-        elif "bye" in user_input:
-            print("Chatbot: Goodbye! Have a nice day.")
-            break
-        
-        else:
-            print("Chatbot: Sorry, I don’t understand that.")
 
-# Run the chatbot
-chatbot()
+# Chatbot response function
+def chatbot_response(user_input):
+    user_input = user_input.lower()
+
+    if "hi" in user_input or "hello" in user_input:
+        return "Hello there! How can I help you?"
+    elif "how are you" in user_input:
+        return "I'm just a bot, but I'm doing great! How about you?"
+    elif "your name" in user_input:
+        return "I am a simple chatbot made in Python."
+    elif "bye" in user_input:
+        return "Goodbye! Have a nice day."
+    else:
+        return "Sorry, I don’t understand that."
+
+
+# Function to handle sending message
+def send_message():
+    user_input = entry.get()
+    if user_input.strip() == "":
+        return
+
+    # Display user input
+    chat_area.insert(tk.END, "You: " + user_input + "\n")
+
+    # Get chatbot response
+    response = chatbot_response(user_input)
+    chat_area.insert(tk.END, "Chatbot: " + response + "\n\n")
+
+    # Scroll down
+    chat_area.yview(tk.END)
+
+    # Clear entry box
+    entry.delete(0, tk.END)
+
+    # Close if user says bye
+    if "bye" in user_input.lower():
+        root.after(1000, root.destroy)
+
+
+# Tkinter window setup
+root = tk.Tk()
+root.title("Python Chatbot")
+root.geometry("400x500")
+
+# Chat area
+chat_area = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=50, height=20, state='normal')
+chat_area.pack(padx=10, pady=10)
+chat_area.insert(tk.END, "Chatbot: Hello! I am your chatbot. Type 'bye' to exit.\n\n")
+
+# Entry box
+entry = tk.Entry(root, width=40)
+entry.pack(side=tk.LEFT, padx=(10,0), pady=10)
+
+# Send button
+send_button = tk.Button(root, text="Send", command=send_message)
+send_button.pack(side=tk.LEFT, padx=10, pady=10)
+
+# Run window
+root.mainloop()
